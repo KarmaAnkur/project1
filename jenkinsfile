@@ -1,11 +1,28 @@
-node('built-in')
 {
     stage('checkout')
     {
-        git branch: 'main', credentialsId: '888b1d92-5e53-4c15-b162-ea60fd390a5a', url: 'https://github.com/KarmaAnkur/project1.git'
+        try
+        {
+            git branch: 'main', credentialsId: '888b1d92-5e53-4c15-b162-ea60fd390a5a', url: 'https://github.com/KarmaAnkur/project1.git'
+        }
+        catch(Exception e1)
+        {
+            mail bcc: '', body: 'Jenkins is unable to download the code from github repo.', cc: 'Rahul.Arora01@motherson.com', from: '', replyTo: '', subject: 'Git checkout failed ', to: 'Ankur.Singh02@motherson.com'
+            exit(1)
+        }
+        
     }
     stage('deploy')
     {
-        sh 'cp /home/ubuntu/.jenkins/workspace/Pipeline1/index.html /var/www/html/'
+        try
+        {
+            sh 'cp /home/ubuntu/.jenkins/workspace/Pipeline1/index.html /var/www/html/'
+        }
+        catch(Exception e2)
+        {
+            mail bcc: '', body: 'Jenkins is unable deploy on the server', cc: 'Rahul.Arora01@motherson.com', from: '', replyTo: '', subject: 'Delpoyment failed', to: 'Ankur.Singh02@motherson.com'
+            exit(1)
+        }
+        
     }
 }
